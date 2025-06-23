@@ -73,7 +73,7 @@ export default function Home(){
         if(!_info) _info = upcoming?.results.find(item => item.id === Number(id));
         if(!_info) _info = top_rated?.results.find(item => item.id === Number(id));
         if(!_info) _info = popular?.results.find(item => item.id === Number(id));
-        if(!_info) navigate("/");
+        if(!_info) navigate("/newflix");
         setInfo(_info);
     },[id]);
 return (

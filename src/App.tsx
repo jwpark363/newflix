@@ -9,14 +9,13 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/newflix" element={<Home />} />
-        <Route path="/" element={<Home />}>
-          <Route path="movie/:id" element={<Home />} />
+        <Route path="/newflix" element={<Home />}>
+          <Route path=":id" element={<Home />} />
         </Route>
-        <Route path="/tv" element={<Tv />}>
+        <Route path="/newflix/tv" element={<Tv />}>
           <Route path=":id" element={<Tv />} />
         </Route>
-        <Route path="/search" element={<Search />} />
+        <Route path="/newflix/search" element={<Search />} />
       </Routes>
     </BrowserRouter>
   )

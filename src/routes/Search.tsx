@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { getImageUrl, getSearch, type IMovie, type IMovieData } from "../api";
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
@@ -98,23 +98,26 @@ const SortKey : ISort[] = [
     }
 ];
 export default function Search(){
+    const navigate = useNavigate();
     const location = useLocation();
     const param = new URLSearchParams(location.search);
-    const [movieSortKey, setMovieSortKey] = useState(SortKey[0].value);
-    const [tvSortKey, setTvSortKey] = useState(SortKey[0].value);
+    const [movieSortKey, setMovieSortKey] = useState(param.get("movieSortKey") === null ? SortKey[0].value : param.get("movieSortKey")!);
+    const [tvSortKey, setTvSortKey] = useState(param.get("tvSortKey") === null ? SortKey[0].value : param.get("tvSortKey")!);
     const [movieItems, setMovieItems] = useState<IMovie[]>([]);
     const [tvItems, setTvItems] = useState<IMovie[]>([]);
     const {data:movieData, isLoading:isLoading1} = useQuery<IMovieData>({
-        queryKey:["search","movie"], 
+        queryKey:["search-movie",param.get("keyword")!], 
         queryFn: () => getSearch("movie",param.get("keyword")!)})
     const {data:tvData, isLoading:isLoading2} = useQuery<IMovieData>({
-        queryKey:["search","tv"], 
+        queryKey:["search-tv",param.get("keyword")!], 
         queryFn: () => getSearch("tv",param.get("keyword")!)})
     const onMovieChange = (event:React.ChangeEvent<HTMLSelectElement>) => {
         setMovieSortKey(Number(event.currentTarget.value));
+        navigate(`/newflix/search?keyword=${param.get("keyword")}&movieSortKey=${movieSortKey}&tvSortKey=${tvSortKey}`);
     }
     const onTvChange = (event:React.ChangeEvent<HTMLSelectElement>) => {
         setTvSortKey(Number(event.currentTarget.value));
+        navigate(`/newflix/search?keyword=${param.get("keyword")}&movieSortKey=${movieSortKey}&tvSortKey=${tvSortKey}`);
     }
     useEffect(() => {
         if(isLoading1 || !movieData) return;
@@ -153,7 +156,7 @@ export default function Search(){
                     </option>)}
                 </select>
             </Title>
-            {movieItems.map(item => <Item>
+            { movieItems.map(item => <Item>
                 <ItemImg style={{
                     backgroundImage:`url(${getImageUrl(item.poster_path,"w500")})`}}
                 />

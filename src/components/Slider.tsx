@@ -106,7 +106,10 @@ export default function Slider({data,root,type}:ISliderItem){
     const [pos, setPos] = useState(0);
     const [_, setStep] = useState<0|1|-1>(-1);
     const handleMovie = (movieId:number) => {
-        navigate(`/${root}/${movieId}`);
+            if(root === "movie")
+                navigate(`/newflix/${movieId}`);
+            else if(root === "tv")
+                navigate(`/newflix/tv/${movieId}`);
     }
     const handlePos = (step:-1|1) => {
         if(isSelected) return;
